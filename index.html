@@ -10,11 +10,20 @@
     <p>The MobileNet model labeled this as
     <span id="result">...</span> with a confidence of
     <span id="probability">...</span></p>
-    <img src="./assets/parrot.jpg"
-     crossorigin="anonymous" id="image" width="400">
 
+    <img src="./assets/parrot.jpg"
+     crossorigin="anonymous" id="image1" width="400" onclick="birdClicked('image1')">
+
+
+     <img src="./assets/bird2.jpg"
+      crossorigin="anonymous" id="image2" width="400" onclick="birdClicked('image2')">
+
+      <img src="./assets/bird3.jpg"
+       crossorigin="anonymous" id="image3" width="400" onclick="birdClicked('image3')">
     <script>
-      const image = document.getElementById('image');
+
+    function birdClicked(name){
+      const image = document.getElementById(name);
       const result = document.getElementById('result');
       const probability = document.getElementById('probability');
 
@@ -26,6 +35,9 @@
         result.innerText = results[0].className;
         probability.innerText = results[0].probability.toFixed(4);
       });
+    }
+
+
 
     </script>
   </body>
