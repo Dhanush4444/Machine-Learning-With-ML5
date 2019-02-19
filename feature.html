@@ -37,9 +37,11 @@ function classifyVideo() {
 }
 
 function gotResult(err, results) {
-  // const result = document.getElementById();
-  select('#result').html(results[0].className);
-  select('#probability').html(nf(results[0].probability, 0, 2));
+  const result = document.getElementById('result');
+  const probability = document.getElementById('probability');
+  const status = document.getElementById('status');
+  result.innerText = results[0].className;
+  probability.innerText = nf(results[0].probability, 0, 2);
   classifyVideo();
 }
 
