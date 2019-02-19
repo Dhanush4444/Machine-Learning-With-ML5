@@ -28,7 +28,8 @@ classifier = ml5.imageClassifier('MobileNet', video, modelReady);
 }
 
 function modelReady() {
-  select('#status').html('Model Loaded');
+  const status = document.getElementById('status');
+  status.innerText = 'Model Loaded !';
   classifyVideo();
 }
 
