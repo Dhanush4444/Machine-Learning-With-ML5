@@ -10,7 +10,7 @@
   </head>
 
   <body>
-    <p id="status">model loading</p>
+    <p id="status">Model Loading</p>
     <button type="button" name="draw" id="draw" > Draw</button>
     <script>
 let model;
@@ -55,7 +55,7 @@ function gotStroke(err, s) {
 }
 
 function modelReady() {
-  select('#status').html('model ready');
+  document.getElementById('status').innerText = 'Model Loaded!';
   startDrawing();
 }
 
