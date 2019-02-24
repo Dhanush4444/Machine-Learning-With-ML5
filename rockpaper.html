@@ -9,9 +9,23 @@
   </head>
   <body>
     <p id="status">...</p>
-<button type="button" id="addClassRock" name="button">Add a Rock Example</button><span id="exampleRock">...</span> Trained <br>
-<button type="button" id="addClassPaper" name="button">Add a Paper Example</button><br>
-<button type="button" id="addClassScissor" name="button">Add a Scissor Example</button><br>
+
+
+<button type="button" id="addClassRock" name="button" onclick="trainData('Rock');">Add a Rock Example</button>
+<button type="button" name="button" onclick="resetTrained('Rock');">RESET Rock</button>
+<span id="exampleRock">...</span> Trained
+<br>
+
+
+<button type="button" id="addClassPaper" name="button" onclick="trainData('Paper');">Add a Paper Example</button>
+<button type="button" name="button" onclick="resetTrained('Paper');">RESET Paper</button>
+<span id="exampleRock">...</span> Trained
+<br>
+
+<button type="button" id="addClassScissor" name="button" onclick="trainData('Scissor');">Add a Scissor Example</button>
+<button type="button" name="button" onclick="resetTrained('Scissor');">RESET Scissor</button>
+<span id="exampleRock">...</span> Trained
+<br>
 
     <script>
       let video;
@@ -45,6 +59,11 @@
 
     knnClassifier.classify(features, gotResults);
   }
+
+function trainData(name){
+  addExample(name);
+}
+
 
 
     </script>
