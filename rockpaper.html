@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Rock Paper</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/p5.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/0.7.3/addons/p5.dom.min.js"></script>
+    <script src="https://unpkg.com/ml5@0.1.3/dist/ml5.min.js"></script>
+  </head>
+  <body>
+
+    <script>
+      let video;
+  const knnClassifier = ml5.KNNClassifier();
+  let featureExtractor;
+
+  function setup() {
+    featureExtractor = ml5.featureExtractor('MobileNet', modelReady);
+    noCanvas();
+    video = createCapture(VIDEO);
+    video.parent('videoContainer');
+    createButtons();
+  }
+
+  function modelReady(){
+    select('#status').html('FeatureExtractor(mobileNet model) Loaded')
+  }
+  function addExample(label) {
+    const features = featureExtractor.infer(video);
+    knnClassifier.addExample(features, label);
+    updateCounts();
+  }
+
+  function classify() {
+    const numLabels = knnClassifier.getNumLabels();
+    if (numLabels <= 0) {
+      console.error('There is no examples in any label');
+      return;
+    }
+    const features = featureExtractor.infer(video);
+
+    knnClassifier.classify(features, gotResults);
+  }
+
+  function createButtons() {
+
+    buttonA = select('#addClassRock');
+    buttonA.mousePressed(function() {
+      addExample('Rock');
+    });
+
+    buttonB = select('#addClassPaper');
+    buttonB.mousePressed(function() {
+      addExample('Paper');
+    });
+
+    buttonC = select('#addClassScissor');
+    buttonC.mousePressed(function() {
+      addExample('Scissor');
+    });
+
+    resetBtnA = select('#resetRock');
+    resetBtnA.mousePressed(function() {
+      clearLabel('Rock');
+    });
+
+    resetBtnB = select('#resetPaper');
+    resetBtnB.mousePressed(function() {
+      clearLabel('Paper');
+    });
+
+    resetBtnC = select('#resetScissor');
+    resetBtnC.mousePressed(function() {
+      clearLabel('Scissor');
+    });
+
+    buttonPredict = select('#buttonPredict');
+    buttonPredict.mousePressed(classify);
+
+
+    buttonClearAll = select('#clearAll');
+    buttonClearAll.mousePressed(clearAllLabels);
+
+    buttonSetData = select('#load');
+    buttonSetData.mousePressed(loadMyKNN);
+
+
+    buttonGetData = select('#save');
+    buttonGetData.mousePressed(saveMyKNN);
+  }
+
+
+  function gotResults(err, result) {
+
+    if (err) {
+      console.error(err);
+    }
+
+    if (result.confidencesByLabel) {
+      const confidences = result.confidencesByLabel;
+
+      if (result.label) {
+        select('#result').html(result.label);
+        select('#confidence').html(`${confidences[result.label] * 100} %`);
+      }
+
+      select('#confidenceRock').html(`${confidences['Rock'] ? confidences['Rock'] * 100 : 0} %`);
+      select('#confidencePaper').html(`${confidences['Paper'] ? confidences['Paper'] * 100 : 0} %`);
+      select('#confidenceScissor').html(`${confidences['Scissor'] ? confidences['Scissor'] * 100 : 0} %`);
+    }
+
+    classify();
+  }
+
+
+  function updateCounts() {
+    const counts = knnClassifier.getCountByLabel();
+
+    select('#exampleRock').html(counts['Rock'] || 0);
+    select('#examplePaper').html(counts['Paper'] || 0);
+    select('#exampleScissor').html(counts['Scissor'] || 0);
+  }
+
+
+  function clearLabel(label) {
+    knnClassifier.clearLabel(label);
+    updateCounts();
+  }
+
+
+  function clearAllLabels() {
+    knnClassifier.clearAllLabels();
+    updateCounts();
+  }
+
+
+  function saveMyKNN() {
+    knnClassifier.save('myKNNDataset');
+  }
+
+
+  function loadMyKNN() {
+    knnClassifier.load('./myKNNDataset.json', updateCounts);
+  }
+
+    </script>
+  </body>
+</html>
