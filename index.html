@@ -30,14 +30,6 @@
       const result = document.getElementById('result');
       const probability = document.getElementById('probability');
 
-      // const classifier = ml5.imageClassifier('MobileNet', function() {
-      //   console.log('Loaded model successfully');
-      // });
-
-      // classifier.predict(image, function(err, results) {
-      //   result.innerText = results[0].className;
-      //   probability.innerText = results[0].probability.toFixed(4);
-      // });
 
 ml5.imageClassifier('MobileNet').then(classifier => classifier.predict(image)).then(results => {
     result.innerText = results[0].className;
