@@ -14,30 +14,34 @@
 <button type="button" id="addClassRock" name="button" onclick="trainData('Rock');">Add a Rock Example</button>
 <button type="button" name="button" onclick="resetTrained('Rock');">RESET Rock</button>
 <span id="exampleRock">...</span> Trained
+<span id="confidenceRock">...</span>
 <br>
 
 
 <button type="button" id="addClassPaper" name="button" onclick="trainData('Paper');">Add a Paper Example</button>
 <button type="button" name="button" onclick="resetTrained('Paper');">RESET Paper</button>
-<span id="exampleRock">...</span> Trained
+<span id="examplePaper">...</span> Trained
+<span id="confidencePaper">...</span>
 <br>
 
 <button type="button" id="addClassScissor" name="button" onclick="trainData('Scissor');">Add a Scissor Example</button>
 <button type="button" name="button" onclick="resetTrained('Scissor');">RESET Scissor</button>
-<span id="exampleRock">...</span> Trained
+<span id="exampleScissor">...</span> Trained
+<span id="confidenceScissor">...</span>
 <br>
 
-    <script>
+<button type="button" id="predictButton" name="button" onclick="classify();">Predict</button>
+
+<script>
       let video;
   const knnClassifier = ml5.KNNClassifier();
-  let featureExtractor;
+  var featureExtractor;
 
   function setup() {
-    featureExtractor = ml5.featureExtractor('MobileNet', modelReady);
     noCanvas();
+    featureExtractor = ml5.featureExtractor('MobileNet', modelReady);
     video = createCapture(VIDEO);
     video.parent('videoContainer');
-    createButtons();
   }
 
   function modelReady(){
@@ -62,6 +66,39 @@
 
 function trainData(name){
   addExample(name);
+}
+
+function resetTrained(name){
+
+}
+function gotResults(err, result){
+if(err){
+  console.log('Error !!!');
+}
+else{
+  if (result.confidencesByLabel) {
+    const confidences = result.confidencesByLabel;
+    if (result.label) {
+      // select('#result').html(result.label);
+      select('#confidence').html(`${confidences[result.label] * 100} %`);
+    }
+
+    select('#confidenceRock').html(`${confidences['Rock'] ? confidences['Rock'] * 100 : 0} %`);
+    select('#confidencePaper').html(`${confidences['Paper'] ? confidences['Paper'] * 100 : 0} %`);
+    select('#confidenceScissor').html(`${confidences['Scissor'] ? confidences['Scissor'] * 100 : 0} %`);
+  }
+
+  classify();
+}
+
+function updateCounts() {
+  const counts = knnClassifier.getCountByLabel();
+
+  document.getElementById('exampleRock').innerText=(counts['Rock']);
+  select('#examplePaper').html(counts['Paper'] || 0);
+  select('#exampleScissor').html(counts['Scissor'] || 0);
+}
+
 }
 
 
