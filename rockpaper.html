@@ -48,6 +48,7 @@
     select('#status').html('Model Loaded!')
   }
   function addExample(label) {
+    // console.log(result.confidencesByLabel);
     const features = featureExtractor.infer(video);
     knnClassifier.addExample(features, label);
     updateCounts();
@@ -79,7 +80,7 @@ else{
   if (result.confidencesByLabel) {
     const confidences = result.confidencesByLabel;
     if (result.label) {
-      // select('#result').html(result.label);
+
       select('#confidence').html(`${confidences[result.label] * 100} %`);
     }
 
